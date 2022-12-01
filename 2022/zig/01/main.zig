@@ -1,18 +1,28 @@
 const std = @import("std");
-const mem = std.mem;
 
 const data = @embedFile("./01.txt");
 
 pub fn main() !void {
-    var input = mem.split(u8, data, "\n");
+    var input = std.mem.split(u8, data, "\n");
 
-    var calories = std.ArrayList(u32).init(std.heap.page_allocator);
-    defer calories.deinit();
+    // Top three calories
+    var tcal = [3]u32{ 0, 0, 0 };
 
     var total: u32 = 0;
     while (input.next()) |v| {
         if (v.len == 0) {
-            try calories.append(total);
+            // Just need to get the top 3, so I think don't need to use sort
+            if (total > tcal[0]) {
+                tcal[2] = tcal[1];
+                tcal[1] = tcal[0];
+                tcal[0] = total;
+            } else if (total > tcal[1]) {
+                tcal[2] = tcal[1];
+                tcal[1] = total;
+            } else if (total > tcal[2]) {
+                tcal[2] = total;
+            }
+
             total = 0;
             continue;
         }
@@ -21,5 +31,22 @@ pub fn main() !void {
         total += cal;
     }
 
-    std.debug.print("AoC D01: {d}\n", .{std.mem.max(u32, calories.items)});
+    std.debug.print(
+        \\AoC D01:
+        \\  Highest     : {d}
+        \\  Sum Top 3   : {d}
+        \\
+    , .{
+        tcal[0],
+        sum(&tcal),
+    });
+}
+
+fn sum(items: []u32) u32 {
+    var total: u32 = 0;
+    for (items) |n| {
+        total += n;
+    }
+
+    return total;
 }
