@@ -33,8 +33,8 @@ pub fn main() !void {
 
     std.debug.print(
         \\AoC D01:
-        \\  Highest     : {d}
-        \\  Sum Top 3   : {d}
+        \\|- Part 1: {d}
+        \\|- Part 2: {d}
         \\
     , .{
         tcal[0],
