@@ -1,13 +1,25 @@
 const std = @import("std");
+const mem = std.mem;
+
+const data = @embedFile("./01.txt");
 
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("AoC D01: {s}\n", .{"?"});
-}
+    var input = mem.split(u8, data, "\n");
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
+    var calories = std.ArrayList(u32).init(std.heap.page_allocator);
+    defer calories.deinit();
+
+    var total: u32 = 0;
+    while (input.next()) |v| {
+        if (v.len == 0) {
+            try calories.append(total);
+            total = 0;
+            continue;
+        }
+
+        const cal = try std.fmt.parseUnsigned(u32, v, 10);
+        total += cal;
+    }
+
+    std.debug.print("AoC D01: {d}\n", .{std.mem.max(u32, calories.items)});
 }
