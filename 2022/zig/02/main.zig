@@ -1,32 +1,8 @@
 const std = @import("std");
 const input = @embedFile("02.txt");
 
-const Result = enum {
-    draw,
-    loss,
-    win,
-
-    pub fn toString(self: Result) []const u8 {
-        return switch (self) {
-            .draw => "draw",
-            .loss => "loss",
-            .win => "win",
-        };
-    }
-};
-const Shape = enum(u4) {
-    rock = 1,
-    paper = 2,
-    scissor = 3,
-
-    pub fn toString(self: Shape) []const u8 {
-        return switch (self) {
-            .rock => "rock",
-            .paper => "paper",
-            .scissor => "scissor",
-        };
-    }
-};
+const Result = enum { draw, loss, win };
+const Shape = enum(u4) { rock = 1, paper = 2, scissor = 3 };
 
 const Round = struct {
     player: Shape,
